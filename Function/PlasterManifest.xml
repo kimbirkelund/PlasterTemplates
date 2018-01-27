@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<plasterManifest 
+<plasterManifest
   xmlns="http://www.microsoft.com/schemas/PowerShell/Plaster/v1" schemaVersion="1.0">
   <metadata>
     <name>FunctionTemplate</name>
@@ -12,6 +12,8 @@
   </metadata>
   <parameters>
     <parameter name="FunctionName" type="text" prompt="Name of your Function" />
+    <parameter name="FunctionPath" type="text" prompt="Relative path to where the function should be created - must have trailing slash." />
+    <parameter name="TestsPath" type="text" prompt="Relative path to where the test should be created - must have trailing slash." />
     <parameter name="Help" type="choice" prompt="Include Comment Based Help?" default='0'>
       <choice label="&amp;Yes" help="Adds comment based help" value="Yes" />
       <choice label="&amp;No" help="Does not add comment based help" value="No" />
@@ -28,9 +30,13 @@
       <choice label="&amp;Yes" help="Adds a default parameter for computername" value="Yes" />
       <choice label="&amp;No" help="Does not include computername parameter" value="No" />
     </parameter>
+    <parameter name="ChangeToScriptLocation" type="choice" prompt="Change current directory to PSScriptRoot, during main part of script, and back again on return." default='0'>
+      <choice label="&amp;Yes" help="Change current directory to PSScriptRoot and back again" value="Yes" />
+      <choice label="&amp;No" help="Leaves current directory as it is" value="No" />
+    </parameter>
   </parameters>
   <content>
-    <templateFile source='functionTemplate.ps1' destination='${PLASTER_PARAM_FunctionName}.ps1'/>
-    <templateFile source='testsTemplate.ps1' destination='${PLASTER_PARAM_FunctionName}.tests.ps1'/>
+    <templateFile source='functionTemplate.ps1' destination='${PLASTER_PARAM_FunctionPath}/${PLASTER_PARAM_FunctionName}.ps1'/>
+    <templateFile source='testsTemplate.ps1' destination='${PLASTER_PARAM_TestsPath}/${PLASTER_PARAM_FunctionName}.tests.ps1'/>
   </content>
 </plasterManifest>

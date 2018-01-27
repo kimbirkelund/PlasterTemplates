@@ -6,14 +6,14 @@
     If ($PLASTER_PARAM_Help -eq 'Yes')
     {
         @"
-  <#
-    .Synopsis
+    <#
+    .SYNOPSIS
       Short description
     .DESCRIPTION
       Long description
     .EXAMPLE
       Example of how to use this cmdlet
-  #>
+    #>
 "@
     }
 %>
@@ -24,18 +24,18 @@
     [CmdletBinding()]
 "@
     }
-    else 
+    else
     {
         @'
-    [CmdletBinding(DefaultParameterSetName='Parameter Set 1', 
-                SupportsShouldProcess=$true, 
+    [CmdletBinding(DefaultParameterSetName='Parameter Set 1',
+                SupportsShouldProcess=$true,
                 PositionalBinding=$false,
                 HelpUri = 'http://www.microsoft.com/',
                 ConfirmImpact='Medium')]
 '@
     }
 %>
-    Param
+    PARAM
     (
 <%
     if ($PLASTER_PARAM_ComputerName -eq 'Yes')
@@ -43,7 +43,7 @@
         @'
         [Parameter(
             ValueFromPipeline=$true,
-            ValueFromPipelineByPropertyName=$true, 
+            ValueFromPipelineByPropertyName=$true,
             Position=0)]
         [string[]]
         $ComputerName
@@ -55,16 +55,30 @@
     if ($PLASTER_PARAM_PipelineSupport -eq 'Yes')
     {
         @'
-    begin
+
+    BEGIN
     {
 
     }
-    process
+
+    PROCESS
     {
 '@
     }
 %>
+        $ErrorActionPreference = "Stop";
+        Set-StrictMode -Version Latest;
+
 <%
+    if ($PLASTER_PARAM_ChangeToScriptLocation -eq 'Yes')
+    {
+        @'
+        Push-Location $PSScriptRoot;
+        try
+        {
+'@
+    }
+
     if ($PLASTER_PARAM_ComputerName -eq 'Yes' -and $PLASTER_PARAM_PipelineSupport -eq 'Yes')
     {
         @'
@@ -74,7 +88,7 @@
         }
 '@
     }
-    elseif ($PLASTER_PARAM_ComputerName -eq 'Yes') 
+    elseif ($PLASTER_PARAM_ComputerName -eq 'Yes')
     {
     @'
     forEach ($computer in $ComputerName)
@@ -83,13 +97,23 @@
     }
 '@
     }
-%>
-<%
+    if ($PLASTER_PARAM_ChangeToScriptLocation -eq 'Yes')
+    {
+        @'
+        }
+        finally
+        {
+            Pop-Location;
+        }
+'@
+    }
+
     if ($PLASTER_PARAM_PipelineSupport -eq 'Yes')
     {
         @'
     }
-    end
+
+    END
     {
 
     }
